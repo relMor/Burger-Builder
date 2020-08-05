@@ -13,9 +13,10 @@ import axios from "../../axios-orders";
 const burgerBuilder = (props) => {
   const [purchasing, setPurchasing] = useState(false);
 
+  const { onInitIngredients } = props;
   useEffect(() => {
-    props.onInitIngredients();
-  }, []);
+    onInitIngredients();
+  }, [onInitIngredients]);
 
   const updatePurchaseState = (ingredients) => {
     const sum = Object.keys(ingredients)
@@ -30,7 +31,7 @@ const burgerBuilder = (props) => {
 
   const purchaseHandler = () => {
     if (props.isAuthenticated) {
-      setPurchasing(true)
+      setPurchasing(true);
     } else {
       props.onSetAuthRedirectPath("/checkout");
       props.history.push("/auth");
@@ -38,7 +39,7 @@ const burgerBuilder = (props) => {
   };
 
   const purchaseCancelHandler = () => {
-    setPurchasing(false)
+    setPurchasing(false);
   };
 
   const purchaseContinueHandler = () => {
@@ -53,11 +54,7 @@ const burgerBuilder = (props) => {
     disabledInfo[key] = disabledInfo[key] <= 0;
   }
   let orderSummary = null;
-  let burger = props.error ? (
-    <p>Ingredients can't be loaded!</p>
-  ) : (
-    <Spinner />
-  );
+  let burger = props.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
 
   if (props.ings) {
     burger = (
@@ -86,10 +83,7 @@ const burgerBuilder = (props) => {
   // {salad: true, meat: false, ...}
   return (
     <React.Fragment>
-      <Modal
-        show={purchasing}
-        modalClosed={purchaseCancelHandler}
-      >
+      <Modal show={purchasing} modalClosed={purchaseCancelHandler}>
         {orderSummary}
       </Modal>
       {burger}
